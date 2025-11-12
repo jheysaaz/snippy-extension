@@ -22,9 +22,7 @@ export default function Login({ theme, onSelectStorage }: LoginProps) {
   return (
     <div className="flex flex-col items-center justify-center h-full p-6">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-semibold mb-2">
-          Welcome to Easy Snippets
-        </h1>
+        <h1 className="text-2xl font-semibold mb-2">Welcome to Snippy</h1>
         <p className="text-zinc-600 dark:text-zinc-400">
           Choose how you want to store your snippets
         </p>
@@ -33,10 +31,10 @@ export default function Login({ theme, onSelectStorage }: LoginProps) {
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <button
           onClick={() => handleSelection("local")}
-          className="group relative flex flex-col items-center gap-3 p-6 border-2 border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/20 transition-all"
+          className="group relative flex flex-col items-center gap-3 p-6 border-2 border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-gray-500 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-950/20 transition-all"
         >
-          <div className="p-3 bg-blue-500/10 dark:bg-blue-500/20 rounded-lg group-hover:bg-blue-500/20 dark:group-hover:bg-blue-500/30 transition-colors">
-            <HardDrive className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+          <div className="p-3 bg-gray-500/10 dark:bg-gray-500/20 rounded-lg group-hover:bg-gray-500/20 dark:group-hover:bg-gray-500/30 transition-colors">
+            <HardDrive className="h-8 w-8 text-gray-600 dark:text-gray-400" />
           </div>
           <div className="text-center">
             <h3 className="font-medium text-lg mb-1">Local Storage</h3>

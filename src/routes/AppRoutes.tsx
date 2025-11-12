@@ -1,7 +1,8 @@
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import CloudLogin from "../pages/CloudLogin";
+import SignUp from "../pages/SignUp";
 
 interface AppRoutesProps {
   theme: "light" | "dark";
@@ -18,14 +19,12 @@ export default function AppRoutes({
 }: AppRoutesProps) {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Login theme={theme} onSelectStorage={onSelectStorage} />}
-      />
+      <Route path="/" element={<Navigate to="/cloud-login" replace />} />
       <Route
         path="/cloud-login"
         element={<CloudLogin theme={theme} onLogin={onCloudLogin} />}
       />
+      <Route path="/sign-up" element={<SignUp theme={theme} />} />
       <Route
         path="/dashboard"
         element={<Dashboard theme={theme} onToggleTheme={onToggleTheme} />}

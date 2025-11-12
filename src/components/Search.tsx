@@ -1,13 +1,20 @@
 import { Search as SearchIcon } from "lucide-react";
 
-export default function Search() {
+interface SearchProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function Search({ value, onChange }: SearchProps) {
   return (
-    <div className="flex items-center gap-2 w-full p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500">
-      <SearchIcon className="h-4 w-4 text-zinc-400 dark:text-zinc-500 shrink-0" />
+    <div className="flex items-center gap-3 w-full px-3 py-2 border border-gray-200 dark:border-zinc-800 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-gray-900 dark:text-zinc-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-400 dark:focus-within:ring-gray-600 focus-within:border-transparent transition-all">
+      <SearchIcon className="h-5 w-5 text-gray-400 dark:text-zinc-500 shrink-0" />
       <input
         type="text"
         placeholder="Search snippets..."
-        className="flex-1 bg-transparent outline-none text-zinc-900 dark:text-zinc-50 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="flex-1 bg-transparent outline-none text-gray-900 dark:text-zinc-50 placeholder:text-gray-400 dark:placeholder:text-zinc-500"
       />
     </div>
   );

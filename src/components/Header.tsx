@@ -1,38 +1,111 @@
-import { Code2, Sun, Moon } from "lucide-react";
+import { Code2, Sun, Moon, Power } from "lucide-react";
+import { authenticatedFetch } from "../utils/api";
+import { getRefreshToken, clearAuthData } from "../utils/storage";
+import { useNavigate } from "react-router";
+import { API_BASE_URL, API_ENDPOINTS } from "../config/constants";
 
 interface HeaderProps {
-  title?: string | "Snippet Manager";
   theme: "light" | "dark";
   onToggleTheme: () => void;
+  onShowToast?: (message: string, type: "success" | "error") => void;
 }
 
-export default function Header({ title, theme, onToggleTheme }: HeaderProps) {
+export default function Header({
+  theme,
+  onToggleTheme,
+  onShowToast,
+}: HeaderProps) {
+  const navigate = useNavigate();
+  const onLogout = async () => {
+    try {
+      const refreshToken = await getRefreshToken();
+      console.log("Refresh token:", refreshToken);
+
+      if (refreshToken) {
+        const response = await authenticatedFetch(
+          API_BASE_URL + API_ENDPOINTS.LOGOUT,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              refresh_token: refreshToken,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          console.error("Logout API failed:", response.status);
+        }
+      }
+
+      // Always clear auth data and show success
+      if (onShowToast) {
+        onShowToast("Logged out successfully!", "success");
+      }
+
+      // Clear all auth data (both chrome.storage and localStorage)
+      await clearAuthData();
+      localStorage.clear(); // Clear any other localStorage data
+
+      // Small delay to show toast before navigation
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
+    } catch (error) {
+      console.error("Error during logout:", error);
+      if (onShowToast) {
+        onShowToast("Logged out successfully!", "success");
+      }
+
+      // Still clear data even if API call fails
+      await clearAuthData();
+      localStorage.clear();
+
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
+    }
+  };
+
   return (
     <header className="flex flex-row transition-colors">
       <div className="flex w-full justify-between items-start">
-        <div className="mb-4">
+        <div className="mb-3">
           <div className="flex items-center gap-2 mb-1">
-            <div className="p-1.5 bg-blue-500/10 dark:bg-blue-500/20 rounded-lg">
-              <Code2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <div className="p-1.5 bg-gray-500/10 dark:bg-gray-500/20 rounded-lg">
+              <Code2 className="h-4 w-4 text-gray-700 dark:text-gray-300" />
             </div>
-            <h1 className="text-zinc-900 dark:text-zinc-50">{title}</h1>
+            <h1 className="text-zinc-900 dark:text-zinc-50">
+              Snippy Dashboard
+            </h1>
           </div>
           <p className="text-zinc-600 dark:text-zinc-400">
             Store and manage your super snippets
           </p>
         </div>
 
-        <button
-          onClick={onToggleTheme}
-          className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
-          aria-label="Toggle theme"
-        >
-          {theme === "light" ? (
-            <Moon className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
-          ) : (
-            <Sun className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
-          )}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleTheme}
+            className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? (
+              <Moon className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
+            ) : (
+              <Sun className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
+            )}
+          </button>
+          <button
+            onClick={onLogout}
+            className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+            aria-label="Logout"
+          >
+            <Power className="h-4 w-4 text-zinc-700 dark:text-zinc-300 hover:text-red-500" />
+          </button>
+        </div>
       </div>
     </header>
   );
